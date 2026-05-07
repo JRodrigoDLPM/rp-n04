@@ -6,7 +6,7 @@ const labels = {
   es: {
     assigned: "Asignada",
     route: "En espera",
-    created: "Alta creada",
+    created: "En espera",
     in_progress: "En entrega",
     completed: "Completada",
     exception: "Excepcion",
@@ -15,7 +15,7 @@ const labels = {
   en: {
     assigned: "Assigned",
     route: "On standby",
-    created: "Created",
+    created: "On standby",
     in_progress: "In progress",
     completed: "Completed",
     exception: "Exception",

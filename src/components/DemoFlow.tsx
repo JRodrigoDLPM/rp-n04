@@ -153,29 +153,40 @@ function VerificationCodeInput({
 }
 
 function IncidentList({ items }: { items: Array<{ id: string; title: string; createdAt: number }> }) {
-  if (items.length === 0) return null
+  const isEmpty = items.length === 0
 
   return (
-    <div className="space-y-2 rounded-2xl border border-amber-300/55 bg-amber-50/75 p-3.5 text-amber-900 dark:border-amber-600/40 dark:bg-amber-500/10 dark:text-amber-100">
+    <div
+      className={cn(
+        "space-y-2 rounded-2xl border p-3.5",
+        isEmpty
+          ? "border-border/60 bg-muted/40 text-muted-foreground dark:border-white/10 dark:bg-white/5"
+          : "border-amber-300/55 bg-amber-50/75 text-amber-900 dark:border-amber-600/40 dark:bg-amber-500/10 dark:text-amber-100",
+      )}
+    >
       <p className="text-xs font-semibold uppercase tracking-[0.08em]">
         Incidentes reportados
       </p>
-      <ul className="space-y-1.5">
-        {items.map((item) => (
-          <li
-            key={item.id}
-            className="rounded-lg border border-amber-300/45 bg-white/75 px-2.5 py-2 text-xs dark:border-amber-500/30 dark:bg-black/20"
-          >
-            <p className="font-medium">{item.title}</p>
-            <p className="text-[0.7rem] text-amber-800/80 dark:text-amber-200/80">
-              {new Date(item.createdAt).toLocaleTimeString("es-MX", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </p>
-          </li>
-        ))}
-      </ul>
+      {isEmpty ? (
+        <p className="text-xs italic text-muted-foreground/90">Sin incidentes</p>
+      ) : (
+        <ul className="space-y-1.5">
+          {items.map((item) => (
+            <li
+              key={item.id}
+              className="rounded-lg border border-amber-300/45 bg-white/75 px-2.5 py-2 text-xs dark:border-amber-500/30 dark:bg-black/20"
+            >
+              <p className="font-medium">{item.title}</p>
+              <p className="text-[0.7rem] text-amber-800/80 dark:text-amber-200/80">
+                {new Date(item.createdAt).toLocaleTimeString("es-MX", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </p>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   )
 }
@@ -190,6 +201,14 @@ function FaultActions({
   const setStatus = useDemoStore((s) => s.setStatus)
   const addIncident = useDemoStore((s) => s.addIncident)
   const notify = useDemoStore((s) => s.notify)
+  const status = useDemoStore((s) => s.status)
+
+  const isInProgress = status === "in_progress"
+  const rejectLabel = isInProgress ? "Cancelar entrega" : "Rechazar entrega"
+  const rejectToastTitle = isInProgress ? "Entrega cancelada" : "Entrega rechazada"
+  const rejectToastBody = isInProgress
+    ? "Se canceló la entrega en curso."
+    : "El cliente marcó rechazo para esta orden."
 
   return (
     <div className="flex flex-wrap items-center justify-center gap-2 border-t border-dashed border-border/80 pt-5">
@@ -216,15 +235,11 @@ function FaultActions({
         size="sm"
         className="rounded-xl border-destructive/35 text-xs font-semibold text-destructive shadow-sm hover:bg-destructive/[0.08]"
         onClick={() => {
-          notify(
-            "Entrega rechazada",
-            "El cliente marcó rechazo para esta orden.",
-            "error",
-          )
+          notify(rejectToastTitle, rejectToastBody, "error")
           setStatus("rejected")
         }}
       >
-        Rechazar entrega
+        {rejectLabel}
       </Button>
     </div>
   )
