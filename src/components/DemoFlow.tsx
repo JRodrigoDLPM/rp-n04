@@ -18,9 +18,6 @@ import {
 import { ArrowRight, CircleDot, MapPin } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-const MOBILE_FIXED_FOOTER_RESERVE =
-  "pb-[calc(1.75rem+env(safe-area-inset-bottom,0px))] sm:pb-0"
-
 const flowI18n = {
   es: {
     homeCompleted: "Entrega completada",
@@ -69,18 +66,6 @@ const flowI18n = {
     routeTitleStop1: "Package pickup",
     routeTitleDestination: "Delivery to end customer",
   },
-}
-
-function StickyBottomCta({ children }: { children: ReactNode }) {
-  return (
-    <div
-      className="fixed inset-x-0 bottom-0 z-[45] shrink-0 border-t border-border/60 bg-background/85 px-4 pt-2 backdrop-blur-xl [padding-bottom:calc(0.5rem+env(safe-area-inset-bottom,0px))] sm:static sm:inset-auto sm:border-0 sm:bg-transparent sm:px-0 sm:pt-0 sm:backdrop-blur-0 sm:[padding-bottom:0px]"
-    >
-      <div className="mx-auto flex w-full max-w-md justify-center sm:max-w-2xl lg:max-w-4xl">
-        {children}
-      </div>
-    </div>
-  )
 }
 
 function validationCopy(validationDoc: boolean, satDoc: boolean) {
