@@ -101,13 +101,13 @@ export function NotificationBell() {
         <Button
           type="button"
           variant="outline"
-          size="icon-sm"
-          className="relative rounded-xl border-black/8 bg-white/90 shadow-[0_8px_28px_-16px_oklch(0.45_0.1_215_/_0.45)] backdrop-blur-md transition-transform duration-150 ease-out active:scale-[0.96] dark:border-white/12 dark:bg-white/10"
+          size="icon-lg"
+          className="relative h-10 w-10 rounded-xl border-black/8 bg-white/90 shadow-[0_8px_28px_-16px_oklch(0.45_0.1_215_/_0.45)] backdrop-blur-md transition-transform duration-150 ease-out active:scale-[0.96] dark:border-white/12 dark:bg-white/10 sm:h-11 sm:w-11"
           aria-label={language === "es" ? "Notificaciones" : "Notifications"}
         >
-          <Bell className="size-[1.125rem] text-foreground/90" />
+          <Bell className="size-[1.35rem] text-foreground/90" />
           {unread > 0 ? (
-            <span className="absolute -right-0.5 -top-0.5 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-[oklch(0.58_0.2_25)] px-1 text-[0.625rem] font-bold text-white shadow-sm ring-2 ring-background">
+            <span className="absolute -right-1.5 -top-1.5 flex min-h-[1.125rem] min-w-[1.125rem] items-center justify-center rounded-full bg-[oklch(0.58_0.2_25)] px-1 text-[0.625rem] font-bold leading-none text-white shadow-sm ring-2 ring-background">
               {unread > 9 ? "9+" : unread}
             </span>
           ) : null}

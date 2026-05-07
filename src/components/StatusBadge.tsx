@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"
 const labels = {
   es: {
     assigned: "Asignada",
-    route: "En ruta",
+    route: "En espera",
     created: "Alta creada",
     in_progress: "En entrega",
     completed: "Completada",
@@ -14,7 +14,7 @@ const labels = {
   },
   en: {
     assigned: "Assigned",
-    route: "On route",
+    route: "On standby",
     created: "Created",
     in_progress: "In progress",
     completed: "Completed",

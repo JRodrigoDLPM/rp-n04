@@ -6,6 +6,32 @@ import { Button } from "@/components/ui/button"
 import trustLayLogo from "@/assets/trustlay-logo.png"
 import { useDemoStore } from "@/store/demo-store"
 
+function FlagES({ className }: { className?: string }) {
+  return (
+    <span
+      className={
+        "block overflow-hidden rounded-[3px] bg-[linear-gradient(to_bottom,#AA151B_0_25%,#F1BF00_25%_75%,#AA151B_75%_100%)] ring-1 ring-black/10 " +
+        (className ?? "")
+      }
+      aria-hidden
+    />
+  )
+}
+
+function FlagUS({ className }: { className?: string }) {
+  return (
+    <span
+      className={
+        "relative block overflow-hidden rounded-[3px] bg-[repeating-linear-gradient(to_bottom,#B22234_0_7.69%,#FFFFFF_7.69%_15.38%)] ring-1 ring-black/10 " +
+        (className ?? "")
+      }
+      aria-hidden
+    >
+      <span className="absolute left-0 top-0 h-[54%] w-[42%] bg-[#3C3B6E]" />
+    </span>
+  )
+}
+
 export function AppLayout({
   children,
   onReset,
@@ -52,10 +78,10 @@ export function AppLayout({
                 type="button"
                 onClick={onGoHome}
                 aria-label={language === "es" ? "Inicio" : "Home"}
-                className="group/home relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-xl border border-black/8 bg-white/90 text-foreground shadow-[0_8px_28px_-16px_oklch(0.45_0.1_215_/_0.45)] backdrop-blur-md transition-all duration-200 ease-out hover:w-[5.9rem] active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 dark:border-white/12 dark:bg-white/10 sm:h-9 sm:w-9"
+                className="group/home relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl border border-black/8 bg-white/90 text-foreground shadow-[0_8px_28px_-16px_oklch(0.45_0.1_215_/_0.45)] backdrop-blur-md transition-all duration-200 ease-out hover:w-[6.5rem] active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 dark:border-white/12 dark:bg-white/10 sm:h-11 sm:w-11"
               >
-                <House className="pointer-events-none absolute left-1/2 top-1/2 size-[1.05rem] -translate-x-1/2 -translate-y-1/2 text-foreground/90 transition-all duration-200 group-hover/home:left-3.5 group-hover/home:translate-x-0 sm:group-hover/home:left-4" />
-                <span className="ml-7 whitespace-nowrap text-[0.625rem] font-semibold uppercase opacity-0 transition-opacity duration-150 group-hover/home:opacity-100 sm:text-[0.6875rem]">
+                <House className="pointer-events-none absolute left-1/2 top-1/2 size-[1.3rem] -translate-x-1/2 -translate-y-1/2 text-foreground/90 transition-all duration-200 group-hover/home:left-3.5 group-hover/home:translate-x-0 sm:group-hover/home:left-4" />
+                <span className="ml-8 whitespace-nowrap text-[0.6875rem] font-semibold uppercase opacity-0 transition-opacity duration-150 group-hover/home:opacity-100 sm:text-[0.75rem]">
                   {language === "es" ? "Inicio" : "Home"}
                 </span>
               </button>
@@ -64,11 +90,18 @@ export function AppLayout({
             <Button
               type="button"
               variant="outline"
-              size="icon-sm"
-              className="rounded-xl border-black/8 bg-white/90 text-[0.625rem] font-semibold uppercase shadow-[0_8px_28px_-16px_oklch(0.45_0.1_215_/_0.45)] backdrop-blur-md transition-transform duration-150 ease-out active:scale-[0.96] dark:border-white/12 dark:bg-white/10"
+              size="icon-lg"
+              className="h-10 w-10 rounded-xl border-black/8 bg-white/90 shadow-[0_8px_28px_-16px_oklch(0.45_0.1_215_/_0.45)] backdrop-blur-md transition-transform duration-150 ease-out active:scale-[0.96] dark:border-white/12 dark:bg-white/10 sm:h-11 sm:w-11"
+              aria-label={
+                language === "es" ? "Cambiar a ingles" : "Switch to Spanish"
+              }
               onClick={() => setLanguage(language === "es" ? "en" : "es")}
             >
-              {language === "es" ? "EN" : "ES"}
+              {language === "es" ? (
+                <FlagES className="h-[1.05rem] w-[1.55rem]" />
+              ) : (
+                <FlagUS className="h-[1.05rem] w-[1.55rem]" />
+              )}
             </Button>
           </div>
         </div>

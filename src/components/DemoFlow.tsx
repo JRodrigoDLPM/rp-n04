@@ -36,7 +36,7 @@ const flowI18n = {
     viewRoute: "Ver ruta",
     backHome: "Regresar al inicio",
     routeTitle: "Tu recorrido",
-    routeSubtitle: "En ruta",
+    routeSubtitle: "En espera",
     routeSubtitle2: "puntos ordenados (simulación).",
     startDelivery: "Iniciar entrega",
     origin: "Origen",
@@ -59,7 +59,7 @@ const flowI18n = {
     viewRoute: "View route",
     backHome: "Back to home",
     routeTitle: "Your route",
-    routeSubtitle: "On route",
+    routeSubtitle: "On standby",
     routeSubtitle2: "ordered stops (simulation).",
     startDelivery: "Start delivery",
     origin: "Origin",
@@ -410,12 +410,7 @@ function ScreenRoute() {
   const setStatus = useDemoStore((s) => s.setStatus)
 
   return (
-    <div
-      className={cn(
-        "space-y-5 transition-all duration-300",
-        MOBILE_FIXED_FOOTER_RESERVE,
-      )}
-    >
+    <div className="transition-all duration-300">
       <Card className="rounded-[1.375rem] shadow-[0_26px_70px_-46px_oklch(0.42_0.1_215_/_0.55)] ring-black/5 dark:ring-white/10">
         <CardHeader className="gap-3 border-b border-border/65 pb-4">
           <div className="flex items-start justify-between gap-3">
@@ -429,10 +424,13 @@ function ScreenRoute() {
             {tx.routeSubtitle2}
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-5 pt-5">
-          <MapPlaceholder caption="En ruta" />
+        <CardContent className="space-y-5 pt-5 md:grid md:grid-cols-2 md:items-start md:gap-5 md:space-y-0">
+          <MapPlaceholder
+            caption={tx.routeSubtitle}
+            className="md:order-2 md:max-h-[55vh]"
+          />
 
-          <ol className="space-y-0 overflow-hidden rounded-2xl ring-1 ring-black/10 dark:ring-white/10">
+          <ol className="space-y-0 overflow-hidden rounded-2xl ring-1 ring-black/10 dark:ring-white/10 md:order-1">
             <RouteLeg
               accent={tx.origin}
               title={tx.routeTitleOrigin}
@@ -451,24 +449,24 @@ function ScreenRoute() {
               address="Av. Insurgentes Sur 601, Ciudad de México · Torre Napoles"
             />
           </ol>
+
+          <div className="flex justify-center pt-1 md:order-3 md:col-span-2 md:pt-2">
+            <Button
+              type="button"
+              size="lg"
+              className="min-w-[12rem] rounded-2xl px-6 text-base shadow-[0_26px_50px_-18px_oklch(0.48_0.12_205_/_0.55)] sm:h-12"
+              onClick={() => {
+                setRouteAccepted(true)
+                setHasStartedDelivery(true)
+                setHasEnteredProofStep(false)
+                setStatus("created")
+              }}
+            >
+              {tx.startDelivery}
+            </Button>
+          </div>
         </CardContent>
       </Card>
-
-      <StickyBottomCta>
-        <Button
-          type="button"
-          size="lg"
-          className="mx-auto min-w-[12rem] rounded-2xl px-6 text-base shadow-[0_26px_50px_-18px_oklch(0.48_0.12_205_/_0.55)] sm:h-12"
-          onClick={() => {
-            setRouteAccepted(true)
-            setHasStartedDelivery(true)
-            setHasEnteredProofStep(false)
-            setStatus("created")
-          }}
-        >
-          {tx.startDelivery}
-        </Button>
-      </StickyBottomCta>
     </div>
   )
 }
@@ -656,22 +654,24 @@ function ScreenTracking({
   if (status === "completed") {
     return (
       <TrackingChrome status={status}>
-        <MapPlaceholder
-          completed
-          caption="Entrega cerrada · mapa inactivo"
-          className="mx-auto max-w-xl"
-        />
-        <div className="flex flex-col items-center gap-4 pb-4 pt-4 text-center">
-          <span className="flex size-[4.125rem] items-center justify-center rounded-[1.5rem] bg-emerald-500/14 text-emerald-700 shadow-inner ring-2 ring-emerald-500/30 animate-in fade-in zoom-in-95 duration-500 dark:text-emerald-200">
-            <CircleDot aria-hidden className="size-10" strokeWidth={1.5} />
-          </span>
-          <div className="max-w-xs">
-            <h3 className="text-xl font-semibold tracking-tight text-emerald-800 dark:text-emerald-50">
-              ¡Entrega terminada con éxito!
-            </h3>
-            <p className="mt-3 text-sm text-muted-foreground">
-              Tus documentos están archivados correctamente.
-            </p>
+        <div className="space-y-6 md:grid md:grid-cols-2 md:items-center md:gap-5 md:space-y-0">
+          <MapPlaceholder
+            completed
+            caption="Entrega cerrada · mapa inactivo"
+            className="mx-auto max-w-xl md:order-2 md:mx-0 md:max-w-none md:max-h-[55vh]"
+          />
+          <div className="flex flex-col items-center gap-4 pb-4 pt-4 text-center md:order-1">
+            <span className="flex size-[4.125rem] items-center justify-center rounded-[1.5rem] bg-emerald-500/14 text-emerald-700 shadow-inner ring-2 ring-emerald-500/30 animate-in fade-in zoom-in-95 duration-500 dark:text-emerald-200">
+              <CircleDot aria-hidden className="size-10" strokeWidth={1.5} />
+            </span>
+            <div className="max-w-xs">
+              <h3 className="text-xl font-semibold tracking-tight text-emerald-800 dark:text-emerald-50">
+                ¡Entrega terminada con éxito!
+              </h3>
+              <p className="mt-3 text-sm text-muted-foreground">
+                Tus documentos están archivados correctamente.
+              </p>
+            </div>
           </div>
         </div>
       </TrackingChrome>
@@ -695,26 +695,32 @@ function ScreenTracking({
             </p>
           </div>
         ) : (
-          <>
+          <div className="space-y-5">
             <p className="text-center text-sm font-semibold tracking-tight text-muted-foreground">
               {phaseLabel}
             </p>
-            <div className="grid gap-4 md:grid-cols-2">
-              <FileDrop
-                label="Hoja de validación"
-                description="Waybill del envío."
-                done={validationDoc}
-                onSimulateUpload={() => setValidationDoc(true)}
-              />
-              <FileDrop
-                label="Validación SAT"
-                description="Información fiscal requerida."
-                done={satDoc}
-                onSimulateUpload={() => setSatDoc(true)}
+            <div className="space-y-5 md:grid md:grid-cols-2 md:items-start md:gap-5 md:space-y-0">
+              <div className="grid gap-4 sm:grid-cols-2 md:order-1 md:grid-cols-1">
+                <FileDrop
+                  label="Hoja de validación"
+                  description="Waybill del envío."
+                  done={validationDoc}
+                  onSimulateUpload={() => setValidationDoc(true)}
+                />
+                <FileDrop
+                  label="Validación SAT"
+                  description="Información fiscal requerida."
+                  done={satDoc}
+                  onSimulateUpload={() => setSatDoc(true)}
+                />
+              </div>
+              <MapPlaceholder
+                disabled
+                caption="GPS en espera"
+                className="mt-2 md:order-2 md:mt-0 md:max-h-[55vh]"
               />
             </div>
-            <MapPlaceholder disabled caption="GPS en espera" className="mt-2" />
-          </>
+          </div>
         )}
         {!incidentReviewOpen ? <IncidentList items={incidents} /> : null}
         {incidentReviewOpen ? (
@@ -753,67 +759,72 @@ function ScreenTracking({
 
   if (status === "in_progress" && !proofEntryOpen) {
     return (
-      <div
-        className={cn(
-          "space-y-5 transition-all duration-300",
-          MOBILE_FIXED_FOOTER_RESERVE,
-        )}
-      >
+      <div className="transition-all duration-300">
         <TrackingChrome status={status} phaseHint={phaseLabel}>
-          {incidentReviewOpen ? (
-            <div className="rounded-2xl border border-amber-300/55 bg-amber-50/55 p-2.5 dark:border-amber-600/40 dark:bg-amber-500/10">
-              <p className="text-center text-xs font-medium text-amber-900 dark:text-amber-100">
-                GPS en pausa por incidencia registrada
-              </p>
+          <div className="space-y-6 md:grid md:grid-cols-2 md:items-start md:gap-5 md:space-y-0">
+            <div className="md:order-2">
+              {incidentReviewOpen ? (
+                <div className="rounded-2xl border border-amber-300/55 bg-amber-50/55 p-2.5 dark:border-amber-600/40 dark:bg-amber-500/10">
+                  <p className="text-center text-xs font-medium text-amber-900 dark:text-amber-100">
+                    GPS en pausa por incidencia registrada
+                  </p>
+                </div>
+              ) : (
+                <MapPlaceholder
+                  gpsActive
+                  caption="GPS activo"
+                  className="md:max-h-[55vh]"
+                />
+              )}
             </div>
-          ) : (
-            <MapPlaceholder gpsActive caption="GPS activo" />
-          )}
-          {!incidentReviewOpen ? <IncidentList items={incidents} /> : null}
-          {incidentReviewOpen ? (
-            <IncidentReviewPanel
-              comment={incidentComment}
-              onCommentChange={setIncidentComment}
-              onContinue={() => {
-                addIncident(incidentComment.trim() || "Incidencia reportada por conductor")
-                notify("Incidente registrado", "Se agregó al historial de incidencias.", "warning")
-                setIncidentComment("")
-                setIncidentReviewOpen(false)
+            <div className="space-y-6 md:order-1">
+              {!incidentReviewOpen ? <IncidentList items={incidents} /> : null}
+              {incidentReviewOpen ? (
+                <IncidentReviewPanel
+                  comment={incidentComment}
+                  onCommentChange={setIncidentComment}
+                  onContinue={() => {
+                    addIncident(incidentComment.trim() || "Incidencia reportada por conductor")
+                    notify("Incidente registrado", "Se agregó al historial de incidencias.", "warning")
+                    setIncidentComment("")
+                    setIncidentReviewOpen(false)
+                  }}
+                  onTerminateException={() => {
+                    const title = incidentComment.trim() || "Incidencia reportada por conductor"
+                    addIncident(title)
+                    notify("Entrega cerrada como excepción", title, "warning")
+                    setIncidentComment("")
+                    setIncidentReviewOpen(false)
+                    setDeliveryCompleted(true)
+                    setDeliveryClosedByIncident(true)
+                    setStatus("exception")
+                  }}
+                />
+              ) : (
+                <FaultActions
+                  mode="log"
+                  onReportLogged={() => {
+                    setIncidentComment("")
+                    setIncidentReviewOpen(true)
+                  }}
+                />
+              )}
+            </div>
+          </div>
+          <div className="flex justify-center">
+            <Button
+              type="button"
+              size="lg"
+              className="min-w-[12rem] rounded-2xl px-6 shadow-[0_26px_50px_-18px_oklch(0.48_0.12_205_/_0.55)] sm:h-12"
+              onClick={() => {
+                setHasEnteredProofStep(true)
+                setProofEntryOpen(true)
               }}
-              onTerminateException={() => {
-                const title = incidentComment.trim() || "Incidencia reportada por conductor"
-                addIncident(title)
-                notify("Entrega cerrada como excepción", title, "warning")
-                setIncidentComment("")
-                setIncidentReviewOpen(false)
-                setDeliveryCompleted(true)
-                setDeliveryClosedByIncident(true)
-                setStatus("exception")
-              }}
-            />
-          ) : (
-            <FaultActions
-              mode="log"
-              onReportLogged={() => {
-                setIncidentComment("")
-                setIncidentReviewOpen(true)
-              }}
-            />
-          )}
+            >
+              Finalizar entrega
+            </Button>
+          </div>
         </TrackingChrome>
-        <StickyBottomCta>
-          <Button
-            type="button"
-            size="lg"
-            className="mx-auto min-w-[12rem] rounded-2xl px-6 shadow-[0_26px_50px_-18px_oklch(0.48_0.12_205_/_0.55)] sm:h-12"
-            onClick={() => {
-              setHasEnteredProofStep(true)
-              setProofEntryOpen(true)
-            }}
-          >
-            Finalizar entrega
-          </Button>
-        </StickyBottomCta>
       </div>
     )
   }
@@ -821,12 +832,7 @@ function ScreenTracking({
   if (status === "in_progress" && proofEntryOpen) {
     const canConfirm = deliveryProof && verificationCode.trim().length === 8
     return (
-      <div
-        className={cn(
-          "space-y-5 transition-all duration-300",
-          MOBILE_FIXED_FOOTER_RESERVE,
-        )}
-      >
+      <div className="transition-all duration-300">
         <TrackingChrome status={status} phaseHint="Validación completada">
           <div className="space-y-3">
             <div className="rounded-3xl bg-muted/50 p-5 ring-1 ring-black/5 dark:ring-white/10">
@@ -856,28 +862,28 @@ function ScreenTracking({
             Requiere prueba cargada y código capturado. Activamos Confirmar cuando el cierre es
             seguro.
           </p>
+          <div className="flex justify-center">
+            <Button
+              type="button"
+              size="lg"
+              className="min-w-[12rem] rounded-2xl px-6 shadow-[0_26px_50px_-18px_oklch(0.48_0.12_205_/_0.55)] disabled:opacity-55 sm:h-12"
+              disabled={!canConfirm}
+              onClick={() => {
+                notify(
+                  "¡Entrega terminada con éxito!",
+                  "TrustLay actualizó el estado del cliente.",
+                  "success",
+                )
+                setDeliveryClosedByIncident(false)
+                setDeliveryCompleted(true)
+                setProofEntryOpen(false)
+                setStatus("completed")
+              }}
+            >
+              Confirmar entrega
+            </Button>
+          </div>
         </TrackingChrome>
-        <StickyBottomCta>
-          <Button
-            type="button"
-            size="lg"
-            className="mx-auto min-w-[12rem] rounded-2xl px-6 shadow-[0_26px_50px_-18px_oklch(0.48_0.12_205_/_0.55)] disabled:opacity-55 sm:h-12"
-            disabled={!canConfirm}
-            onClick={() => {
-              notify(
-                "¡Entrega terminada con éxito!",
-                "TrustLay actualizó el estado del cliente.",
-                "success",
-              )
-              setDeliveryClosedByIncident(false)
-              setDeliveryCompleted(true)
-              setProofEntryOpen(false)
-              setStatus("completed")
-            }}
-          >
-            Confirmar entrega
-          </Button>
-        </StickyBottomCta>
       </div>
     )
   }
@@ -912,7 +918,7 @@ function TrackingChrome({
           </div>
           <TrackingStepBar status={status} />
         </CardHeader>
-        <CardContent className="space-y-6 pb-8 pt-5 sm:pb-12">{children}</CardContent>
+        <CardContent className="space-y-6 pt-5">{children}</CardContent>
       </Card>
     </div>
   )
